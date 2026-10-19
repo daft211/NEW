@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Responsive Two-Level CSS Sprite Navigation</title>
+  <style>
+    /* ===== Reset & Base ===== */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      line-height: 1.5;
+      color: #222;
+      background: #f5f5f5;
+    }
+
+    /* ===== Horizontal Navigation with CSS Sprites ===== */
+    nav {
+      background: #1a1a1a;
+      position: relative;
+      z-index: 100;
+    }
+
+    nav > ul {
+      list-style: none;
+      display: flex;                 /* Flexbox for horizontal layout */
+      flex-wrap: wrap;               /* Allows wrapping on very small screens */
+      justify-content: flex-start;
+    }
+
+    nav > ul > li {
+      position: relative;
+    }
+
+    /* Top-level links using a CSS sprite */
+    nav > ul > li > a {
+      display: block;
+      min-width: 120px;
+      height: 48px;
+      color: #fff;
+      text-decoration: none;
+      text-align: center;
+      line-height: 48px;
+      padding: 0 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+      /* Sprite image – single file contains all button states */
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='480' height='96'%3E%3Crect width='120' height='48' fill='%23222'/%3E%3Crect x='120' width='120' height='48' fill='%23222'/%3E%3Crect x='240' width='120' height='48' fill='%23222'/%3E%3Crect x='360' width='120' height='48' fill='%23222'/%3E%3Crect y='48' width='120' height='48' fill='%23444'/%3E%3Crect x='120' y='48' width='120' height='48' fill='%23444'/%3E%3Crect x='240' y='48' width='120' height='48' fill='%23444'/%3E%3Crect x='360' y='48' width='120' height='48' fill='%23444'/%3E%3Ctext x='60' y='30' fill='white' font-family='Arial' font-size='14' text-anchor='middle'%3EHome%3C/text%3E%3Ctext x='180' y='30' fill='white' font-family='Arial' font-size='14' text-anchor='middle'%3EAbout%3C/text%3E%3Ctext x='300' y='30' fill='white' font-family='Arial' font-size='14' text-anchor='middle'%3EServices%3C/text%3E%3Ctext x='420' y='30' fill='white' font-family='Arial' font-size='14' text-anchor='middle'%3EContact%3C/text%3E%3Ctext x='60' y='78' fill='white' font-family='Arial' font-size='14' text-anchor='middle'%3EHome%3C/text%3E%3Ctext x='180' y='78' fill='white' font-family='Arial' font-size='14' text-anchor='middle'%3EAbout%3C/text%3E%3Ctext x='300' y='78' fill='white' font-family='Arial' font-size='14' text-anchor='middle'%3EServices%3C/text%3E%3Ctext x='420' y='78' fill='white' font-family='Arial' font-size='14' text-anchor='middle'%3EContact%3C/text%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-size: 480px 96px;
+      transition: background-position 0.15s ease;
+    }
+
+    /* Position each link on the sprite sheet */
+    nav > ul > li:nth-child(1) > a { background-position: 0 0; }
+    nav > ul > li:nth-child(2) > a { background-position: -120px 0; }
+    nav > ul > li:nth-child(3) > a { background-position: -240px 0; }
+    nav > ul > li:nth-child(4) > a { background-position: -360px 0; }
+
+    /* Hover / focus state – slides to second row of the sprite */
+    nav > ul > li > a:hover,
+    nav > ul > li > a:focus {
+      background-position-y: -48px;
+      outline: none;
+    }
+
+    /* ===== Second-level (dropdown) menus ===== */
+    nav ul ul {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: #333;
+      min-width: 180px;
+      z-index: 20;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+      border-radius: 0 0 4px 4px;
+    }
+
+    nav ul li:hover > ul,
+    nav ul li:focus-within > ul {
+      display: block;
+    }
+
+    nav ul ul a {
+      display: block;
+      padding: 0.8rem 1.1rem;
+      color: #fff;
+      text-decoration: none;
+      white-space: nowrap;
+      font-size: 0.95rem;
+      border-bottom: 1px solid #444;
+    }
+
+    nav ul ul a:last-child {
+      border-bottom: none;
+    }
+
+    nav ul ul a:hover,
+    nav ul ul a:focus {
+      background: #555;
+      outline: none;
+    }
+
+    /* ===== Main Content ===== */
+    main {
+      max-width: 960px;
+      margin: 2rem auto;
+      padding: 0 1.25rem;
+    }
+
+    h1 {
+      font-size: 1.75rem;
+      margin-bottom: 1.25rem;
+      color: #111;
+    }
+
+    .images {
+      display: flex;                 /* Flexbox for the two images */
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .images figure {
+      flex: 1 1 280px;               /* Grow, shrink, basis */
+      margin: 0;
+      background: #fff;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+    }
+
+    .images img {
+      width: 100%;
+      height: auto;                  /* Fluid images – key for responsiveness */
+      display: block;
+      vertical-align: middle;
+    }
+
+    .images figcaption {
+      padding: 0.75rem 1rem;
+      font-size: 0.9rem;
+      color: #555;
+      background: #fff;
+    }
+
+    .info {
+      background: #fff;
+      padding: 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+      margin-bottom: 2rem;
+    }
+
+    .info h2 {
+      font-size: 1.25rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .info p {
+      margin-bottom: 0.75rem;
+    }
+
+    .info ul {
+      margin-left: 1.25rem;
+      margin-bottom: 0.75rem;
+    }
+
+    /* ===== Responsive adjustments ===== */
+    @media (max-width: 640px) {
+      nav > ul {
+        flex-direction: column;      /* Stack links vertically on small screens */
+      }
+
+      nav > ul > li > a {
+        width: 100%;
+        min-width: 0;
+        background-position-x: 0 !important; /* Reset sprite offset for full-width buttons */
+        text-indent: 0;             /* Ensure text is visible if sprite fails */
+        background-image: none;      /* Fallback: solid background on mobile */
+        background-color: #1a1a1a;
+        border-bottom: 1px solid #333;
+      }
+
+      nav > ul > li > a:hover,
+      nav > ul > li > a:focus {
+        background-color: #333;
+        background-position-y: 0;
+      }
+
+      nav ul ul {
+        position: static;            /* Dropdowns become inline on mobile */
+        box-shadow: none;
+        border-radius: 0;
+        background: #2a2a2a;
+      }
+
+      nav ul ul a {
+        padding-left: 2rem;
+      }
+
+      .images {
+        gap: 1rem;
+      }
+
+      h1 {
+        font-size: 1.4rem;
+      }
+    }
+
+    /* Medium screens – keep horizontal nav but allow slight wrapping */
+    @media (min-width: 641px) and (max-width: 800px) {
+      nav > ul > li > a {
+        min-width: 100px;
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Two-level horizontal navigation bar with CSS sprites -->
+  <nav aria-label="Main navigation">
+    <ul>
+      <li><a href="#home">Home</a></li>
+      <li>
+        <a href="#about">About</a>
+        <ul>
+          <li><a href="#team">Our Team</a></li>
+          <li><a href="#history">History</a></li>
+          <li><a href="#mission">Mission</a></li>
+        </ul>
+      </li>
+      <li>
+        <a href="#services">Services</a>
+        <ul>
+          <li><a href="#web">Web Design</a></li>
+          <li><a href="#seo">SEO</a></li>
+          <li><a href="#hosting">Hosting</a></li>
+        </ul>
+      </li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <h1>Responsive Page with Sprite Navigation</h1>
+
+    <!-- Two images -->
+    <div class="images">
+      <figure>
+        <img src="https://picsum.photos/id/1015/600/400" alt="Mountain landscape with lake">
+        <figcaption>Mountain landscape</figcaption>
+      </figure>
+      <figure>
+        <img src="https://picsum.photos/id/1016/600/400" alt="Forest path through trees">
+        <figcaption>Forest path</figcaption>
+      </figure>
+    </div>
+
+    <section class="info">
+      <h2>How this page was made responsive</h2>
+      <p>Key techniques used:</p>
+      <ul>
+        <li><strong>Viewport meta tag</strong> – <code>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</code> so the browser sizes the page to the device.</li>
+        <li><strong>Fluid images</strong> – <code>width: 100%; height: auto;</code> so images scale with their container.</li>
+        <li><strong>Flexbox with flex-wrap</strong> – the navigation and the two-image gallery use <code>display: flex</code> + <code>flex-wrap: wrap</code> so items can reflow.</li>
+        <li><strong>Media queries</strong> – at 640px and below the nav switches to a vertical stack and dropdowns become static (inline) for better touch usability.</li>
+        <li><strong>Flexible basis</strong> – <code>flex: 1 1 280px</code> on the image figures lets them sit side-by-side on wide screens and stack on narrow ones.</li>
+      </ul>
+    </section>
+
+    <section class="info">
+      <h2>CSS Flexbox vs CSS Grid – when to use which</h2>
+      <p><strong>Flexbox (Flexible Box Layout)</strong> is a one-dimensional layout system. It is ideal for arranging items in a single row or a single column (navigation bars, toolbars, card rows, centering content). You control alignment, distribution of free space, and wrapping along one axis.</p>
+      <p><strong>CSS Grid</strong> is a two-dimensional layout system. It is ideal when you need both rows and columns at the same time (full page layouts, photo galleries with precise placement, complex dashboard grids). You define tracks (rows and columns) and place items into cells or areas.</p>
+      <p><strong>Why choose one over the other?</strong></p>
+      <ul>
+        <li>Use <strong>Flexbox</strong> when the layout is mainly linear (this navigation bar and the simple two-image row are perfect Flexbox candidates).</li>
+        <li>Use <strong>Grid</strong> when you need explicit control over both dimensions, overlapping items, or named template areas (e.g., a full site skeleton with header / sidebar / main / footer).</li>
+        <li>They work well together: Grid for the overall page structure, Flexbox for the components inside each grid area.</li>
+      </ul>
+    </section>
+  </main>
+
+</body>
+</html>
